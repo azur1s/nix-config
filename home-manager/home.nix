@@ -51,7 +51,6 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     discord
-    github-desktop
     google-chrome
     neovim
     vscode
