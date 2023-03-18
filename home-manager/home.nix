@@ -50,10 +50,13 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    discord
-    google-chrome
-    neovim
-    vscode
+    # CLI
+    bat fzf zip unzip ripgrep neofetch
+    # Online stuff
+    discord google-chrome
+    # Editor
+    neovim vscode
+    # Shell
     zsh
   ];
 
