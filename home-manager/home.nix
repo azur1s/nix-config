@@ -41,22 +41,71 @@
     };
   };
 
-  # TODO: Set your username
   home = {
     username = "azur";
     homeDirectory = "/home/azur";
     packages = with pkgs; [
       # Languages
       gcc rustup
-      # CLI
+      # Tools
       bat fzf zip unzip ripgrep neofetch
+      grim slurp wl-clipboard
+      xdg-utils
       # Online stuff
       discord google-chrome
       # Editor
       neovim vscode
       # Shell
-      zsh
+      alacritty zsh
+      # WM
+      swaylock swayidle
+      glib mako wofi
     ];
+    sessionVariables = {
+      WLR_DRM_NO_MODIFIERS = "1";
+      SDL_VIDEODRIVER = "wayland";
+      QT_QPA_PLATFORM = "wayland";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+      XDG_SESSION_TYPE = "wayland";
+      XDG_CURRENT_DESKTOP = "sway";
+    };
+  };
+
+  wayland.windowManager.sway = {
+    enable = true;
+    systemdIntegration = true;
+    wrapperFeatures.gtk = true;
+    config = {
+      modifier = "Mod4";
+      terminal = "alacritty msg create-window || alacritty";
+      menu = "wofi --show run";
+      input = {
+        "type:pointer" = {
+          accel_profile = "flat";
+        };
+        "type:touchpad" = {
+          accel_profile = "adaptive";
+          tap = "enabled";
+          scroll_method = "two_finger";
+          dwt = "enabled";
+        };
+      };
+      keybindings = let
+        cfg = config.wayland.windowManager.sway.config;
+        mod = cfg.modifier;
+      in lib.mkOptionDefault rec {
+        "${mod}+space" = "exec ${cfg.menu}";
+        "${mod}+Return" = "exec ${cfg.terminal}";
+        "${mod}+q" = "kill";
+        "${mod}+f" = "floating toggle";
+      };
+    };
+  };
+
+  programs.mako = {
+    enable = true;
+    anchor = "bottom-right";
   };
 
   # Enable home-manager and git

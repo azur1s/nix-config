@@ -77,30 +77,30 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
     azur = {
       shell = pkgs.zsh;
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect.
+        # Add your SSH public key(s) here, if you plan on using SSH to connect.
       ];
-      # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
-      extraGroups = [ "networkmanager" "wheel" ];
+      extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
     };
   };
+
+  # Enable brightness function keys (for laptop)
+  programs.light.enable = true;
 
   services.xserver = {
     # Enable the X11 windowing system.
     enable = true;
     # Enable automatic login for the user.
-    displayManager = {
-      autoLogin = {
-        enable = true;
-        user = "azur";
-      };
-      sddm.enable = true;
-    };
+    # displayManager = {
+    #   autoLogin = {
+    #     enable = true;
+    #     user = "azur";
+    #   };
+    # };
     # Enable the KDE Plasma Desktop Environment.
     desktopManager.plasma5.enable = true;
     # Configure keymap in X11
@@ -110,6 +110,10 @@
 
   # Keep Xorg running.
   systemd.services.displayManager.restartIfChanged = false;
+
+  # Auth token (VSCode)
+  services.gnome.gnome-keyring.enable = true;
+  # security.pam.services.sddm.enableGnomeKeyring = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -122,6 +126,13 @@
     pulse.enable = true;
   };
 
+  security.polkit.enable = true;
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
+
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
@@ -131,9 +142,6 @@
     # Use keys only. Remove if you want to SSH using password (not recommended)
     passwordAuthentication = false;
   };
-
-  # List packages installed in system profile.
-
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "22.11";
