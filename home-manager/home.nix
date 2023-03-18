@@ -46,6 +46,8 @@
     username = "azur";
     homeDirectory = "/home/azur";
     packages = with pkgs; [
+      # Languages
+      gcc rustup
       # CLI
       bat fzf zip unzip ripgrep neofetch
       # Online stuff
