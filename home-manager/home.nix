@@ -88,6 +88,7 @@
       bindkey "^[[1;5D" backward-word
       bindkey "^I" complete-word
       bindkey "^[[Z" autosuggest-accept
+      bindkey "^H" backward-kill-word
       eval "$(starship init zsh)"
     '';
   };
