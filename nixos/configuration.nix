@@ -1,9 +1,11 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 
-{ inputs, outputs, lib, config, pkgs, ... }: {
+{ config, inputs, outputs, lib, pkgs, ... }: {
   # You can import other NixOS modules here
   imports = [
+    inputs.hardware.nixosModules.common-cpu-intel
+
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
@@ -95,12 +97,13 @@
     # Enable the X11 windowing system.
     enable = true;
     # Enable automatic login for the user.
-    # displayManager = {
-    #   autoLogin = {
-    #     enable = true;
-    #     user = "azur";
-    #   };
-    # };
+    displayManager = {
+      autoLogin = {
+        enable = true;
+        user = "azur";
+      };
+      sddm.enable = true;
+    };
     # Enable the KDE Plasma Desktop Environment.
     desktopManager.plasma5.enable = true;
     # Configure keymap in X11
@@ -108,10 +111,30 @@
     xkbVariant = "";
   };
 
+  fonts.fonts = with pkgs; [
+    google-fonts
+  ];
+
+  fonts.fontconfig.defaultFonts = {
+    monospace = [
+      "Fragment Mono"
+    ];
+  };
+
+  # OpenGL.
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+  };
+
   # Keep Xorg running.
   systemd.services.displayManager.restartIfChanged = false;
 
-  # Auth token (VSCode)
+  # Auth token thing.
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
   services.gnome.gnome-keyring.enable = true;
   # security.pam.services.sddm.enableGnomeKeyring = true;
 
