@@ -1,17 +1,10 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 
-{ inputs, outputs, lib, config, pkgs, ... }: {
-  # You can import other home-manager modules here
+{ config, inputs, outputs, pkgs, ... }: {
   imports = [
-    # If you want to use modules your own flake exports (from modules/home-manager):
-    # outputs.homeManagerModules.example
-
-    # Or modules exported from other flakes (such as nix-colors):
-    # inputs.nix-colors.homeManagerModules.default
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
+    ./alacritty
+    ./nvim
   ];
 
   nixpkgs = {
@@ -46,16 +39,10 @@
     homeDirectory = "/home/azur";
     packages = with pkgs; [
       gcc rustup
-
-      bat fzf zip unzip ripgrep neofetch
-
-      xdg-utils
-
+      bat exa fzf fd zip unzip ripgrep neofetch
+      xdg-utils light
       discord google-chrome
-
-      neovim vscode
-
-      alacritty
+      vscode
     ];
   };
 
@@ -86,6 +73,7 @@
     enableAutosuggestions = true;
     enableCompletion = true;
     shellAliases = {
+      ls = "exa";
       cdc = "cd ~/Code";
       up = "sudo nixos-rebuild switch";
     };
@@ -94,10 +82,12 @@
       path = "${config.xdg.dataHome}/.zsh_history";
     };
     initExtra = ''
-      zstyle ':completion:*' menu select
+      zstyle ":completion:*" menu select
       bindkey -e
       bindkey "^[[1;5C" forward-word
       bindkey "^[[1;5D" backward-word
+      bindkey "^I" complete-word
+      bindkey "^[[Z" autosuggest-accept
       eval "$(starship init zsh)"
     '';
   };
