@@ -38,7 +38,7 @@
     username = "azur";
     homeDirectory = "/home/azur";
     packages = with pkgs; [
-      gcc rustup
+      gcc rustup nodejs python3
       bat exa fzf fd zip unzip ripgrep neofetch
       xdg-utils light
       discord google-chrome
